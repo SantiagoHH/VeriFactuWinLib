@@ -37,6 +37,13 @@
     address: info@irenesolutions.com
  */
 
+/*
+ Modificaciones realizadas por: Santiago Nicolás Hernández Hernández  
+ Empresa: Ingeniería de Desarrollo y Servicios de Canarias, S.L. (https://idssoft.net/)  
+ Fecha: 2025  
+ Descripción: Modificaciones a propiedades del proyecto original y añadidas nuevas propiedades para usar el modo no_verifactu.
+*/
+
 using System;
 using System.Globalization;
 using System.IO;
@@ -54,36 +61,30 @@ using VeriFactu.Xml.Factu;
 namespace VeriFactu.Config
 {
 
-	/// <summary>
-	/// Configuración.
-	/// </summary>
-	[Serializable]
-	[XmlRoot("Settings")]
-	public class Settings
-	{
+    /// <summary>
+    /// Configuración.
+    /// </summary>
+    [Serializable]
+    [XmlRoot("Settings")]
+    public class Settings
+    {
 
-		#region Variables Privadas Estáticas
+        #region Variables Privadas Estáticas
 
-		/// <summary>
-		/// Path separator win="\" and linux ="/".
-		/// </summary>
-		static readonly char _PathSep = System.IO.Path.DirectorySeparatorChar;
+        /// <summary>
+        /// Path separator win="\" and linux ="/".
+        /// </summary>
+        static readonly char _PathSep = System.IO.Path.DirectorySeparatorChar;
 
-		/// <summary>
-		/// Configuración actual.
-		/// </summary>
-		static Settings _Current;
+        /// <summary>
+        /// Configuración actual.
+        /// </summary>
+        static Settings _Current;
 
-		/// <summary>
-		/// Ruta al directorio de configuración.
-		/// </summary>
-		static readonly string _Path =
-#if !LE_461
-            RuntimeInformation.IsOSPlatform(OSPlatform.Create("OSX")) || RuntimeInformation.IsOSPlatform(OSPlatform.Create("IOS")) || 
-            RuntimeInformation.IsOSPlatform(OSPlatform.Create("ANDROID")) ?
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + $"{_PathSep}VeriFactu{_PathSep}" :
-#endif
-            Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + $"{_PathSep}VeriFactu{_PathSep}";
+        /// <summary>
+        /// Ruta al directorio de configuración.
+        /// </summary>
+        static readonly string _Path = $"path_verifactu_setting";
 
         /// <summary>
         /// Ruta al directorio de la cadena de bloques.
@@ -153,7 +154,7 @@ namespace VeriFactu.Config
             string FullPath = $"{Path}{_PathSep}" + FileName;
 
             XmlSerializer serializer = new XmlSerializer(_Current.GetType());
-            
+
             if (File.Exists(FullPath))
             {
 
@@ -164,7 +165,7 @@ namespace VeriFactu.Config
             else
             {
 
-                _Current= GetDefault();
+                _Current = GetDefault();
 
             }
 
@@ -196,12 +197,12 @@ namespace VeriFactu.Config
         /// por defecto de configuración.
         /// </summary>
         /// <returns></returns>
-        internal static Settings GetDefault() 
+        internal static Settings GetDefault()
         {
 
             var numeroInstalacion = "01";
 
-            try 
+            try
             {
 
                 var mac = GetLocalMacAddress();
@@ -210,7 +211,7 @@ namespace VeriFactu.Config
                     numeroInstalacion = mac;
 
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
 
                 Utils.Log($"{ex}");
@@ -229,14 +230,18 @@ namespace VeriFactu.Config
                 CertificateThumbprint = "",
                 CertificatePath = "",
                 CertificatePassword = "",
+                VeriFactuMode = "noverifactu_mode",
+                NoVeriFactuNif = "api_key_nif",
+                NoVeriFactuKey = "api_key_key",
+                VeriFactuEndPointNoVeriFactuPrefix = VeriFactuEndPointPrefixes.TestNoVerifactu,
                 VeriFactuEndPointPrefix = VeriFactuEndPointPrefixes.Test,
                 VeriFactuEndPointValidatePrefix = VeriFactuEndPointPrefixes.TestValidate,
                 VeriFactuHashAlgorithm = TipoHuella.Sha256,
                 VeriFactuHashInputEncoding = "UTF-8",
-                SistemaInformatico = new SistemaInformatico() 
-                { 
-                    NIF = "B12959755",
-                    NombreRazon = "IRENE SOLUTIONS SL",
+                SistemaInformatico = new SistemaInformatico()
+                {
+                    NIF = "B38440780",
+                    NombreRazon = "INGENIERÍA DE DESARROLLO Y SERVICIOS DE CANARIAS, S.L.",
                     NombreSistemaInformatico = $"{Assembly.GetExecutingAssembly().GetName().Name}",
                     IdSistemaInformatico = "01",
                     Version = $"{Assembly.GetExecutingAssembly().GetName().Version}",
@@ -245,7 +250,7 @@ namespace VeriFactu.Config
                     TipoUsoPosibleMultiOT = "S",
                     IndicadorMultiplesOT = "S"
                 },
-                Api = new Api() 
+                Api = new Api()
                 {
                     EndPointCreate = "https://facturae.irenesolutions.com:8050/Kivu/Taxes/Verifactu/Invoices/Create",
                     EndPointCancel = "https://facturae.irenesolutions.com:8050/Kivu/Taxes/Verifactu/Invoices/Cancel",
@@ -328,25 +333,25 @@ namespace VeriFactu.Config
         /// de las distintas cadenas de bloques por emisor.
         /// </summary>
         [XmlElement("BlockchainPath")]
-        public string BlockchainPath 
-        { 
-            get 
-            { 
+        public string BlockchainPath
+        {
+            get
+            {
 
-                return _BlockchainPath; 
+                return _BlockchainPath;
 
-            } 
-            set 
-            { 
+            }
+            set
+            {
 
-                if(Current.BlockchainPath != null && Current.BlockchainPath != value 
+                if (Current.BlockchainPath != null && Current.BlockchainPath != value
                     && Directory.GetDirectories(Current.BlockchainPath).Length > 0)
                     throw new InvalidOperationException($"No se puede cambiar el valor" +
                         $" de 'BlockchainPath' si la carpeta no está vacía.");
 
-                _BlockchainPath = value; 
+                _BlockchainPath = value;
 
-            } 
+            }
         }
 
         /// <summary>
@@ -407,6 +412,41 @@ namespace VeriFactu.Config
         [XmlElement("VeriFactuEndPointValidatePrefix")]
         public string VeriFactuEndPointValidatePrefix { get; set; }
 
+
+        /// <summary>
+        /// Modo Verifactu/Noverifactu.
+        /// </summary>
+        [XmlElement("VeriFactuMode")]
+        public string VeriFactuMode { get; set; }
+
+        /// <summary>
+        /// Modo Noverifactu Nif del sistema de autentificación.
+        /// </summary>
+        [XmlElement("NoVeriFactuNif")]
+        public string NoVeriFactuNif { get; set; }
+        /// <summary>
+        /// Modo Noverifactu Key del sistema de autentificación.
+        /// </summary>
+        [XmlElement("NoVeriFactuKey")]
+        public string NoVeriFactuKey { get; set; }
+
+        /// <summary>
+        /// Modo Noverifactu Token del sistema de autentificación.
+        /// </summary>
+        [XmlElement("NoVeriFactuToken")]
+        public string NoVeriFactuToken { get; set; }
+        /// <summary>
+        /// Modo Noverifactu Tiempo de expiración del Token del sistema de autentificación.
+        /// </summary>
+        [XmlElement("NoVeriFactuTokenTime")]
+        public DateTime NoVeriFactuTokenTime { get; set; }
+        /// <summary>
+        /// EndPoint de la api externa para envío registros alta y anulación.
+        /// </summary>
+        [XmlElement("VeriFactuEndPointNoVeriFactuPrefix")]
+        public string VeriFactuEndPointNoVeriFactuPrefix { get; set; }
+
+
         /// <summary>
         /// Algoritmo a utilizar para el cálculo de hash.
         /// Clave que identifica Tipo de hash aplicado para
@@ -430,7 +470,7 @@ namespace VeriFactu.Config
         /// <summary>
         /// Datos del API REST para Verifactu de Irene Solutions.
         /// </summary>
-        [XmlElement("Api")] 
+        [XmlElement("Api")]
         public Api Api { get; set; }
 
         /// <summary>
@@ -493,7 +533,7 @@ namespace VeriFactu.Config
             var dirs = new string[] { Path, _Current.InboxPath, _Current.OutboxPath,
                 _Current.BlockchainPath, _Current.InvoicePath, _Current.LogPath };
 
-            foreach (var dir in dirs) 
+            foreach (var dir in dirs)
                 if (dir != null && !Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
 

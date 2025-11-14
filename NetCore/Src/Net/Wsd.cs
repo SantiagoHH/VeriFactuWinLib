@@ -37,6 +37,13 @@
     address: info@irenesolutions.com
  */
 
+/*
+Modificaciones realizadas por: Santiago Nicolás Hernández Hernández  
+Empresa: Ingeniería de Desarrollo y Servicios de Canarias, S.L. (https://idssoft.net/)  
+Fecha: 2025  
+Descripción: Modificaciones al método Call nueve funcionalidad del modo no_verifactu.
+*/
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -48,7 +55,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using VeriFactu.Config;
-
+using VeriFactu.Net.Rest;
 namespace VeriFactu.Net
 {
 
@@ -78,7 +85,7 @@ namespace VeriFactu.Net
             CheckCertificate(certificate);
 
             return certificate;
-          
+
 
         }
 
@@ -87,7 +94,7 @@ namespace VeriFactu.Net
         /// </summary>
         /// <param name="certificate">Verifica la validez del certificado.</param>
         /// <exception cref="InvalidOperationException">Se lanza si el certificado ha expirado (fecha NotAfter en el pasado).</exception>
-        internal static void CheckCertificate(X509Certificate2 certificate) 
+        internal static void CheckCertificate(X509Certificate2 certificate)
         {
 
             if (certificate.NotAfter < DateTime.Now)
@@ -107,34 +114,41 @@ namespace VeriFactu.Net
         internal static string Call(string url, string action, XmlDocument xmlDocument, X509Certificate2 certificate = null)
         {
 
-            if (HttpClients.ContainsKey(url))
-                return GetResponse(HttpClients[url], url, action, xmlDocument);
-
-            HttpWebRequest webRequest = CreateWebRequest(url, action);
-
-            X509Certificate2 cert = certificate??GetCheckedCertificate();
-
-            webRequest.ClientCertificates.Add(cert);
-
-            using (Stream stream = webRequest.GetRequestStream())
+            string responseFromServer = null;
+            if (Settings.Current.VeriFactuMode == "verifactu")
             {
-                xmlDocument.Save(stream);
+                if (HttpClients.ContainsKey(url))
+                    return GetResponse(HttpClients[url], url, action, xmlDocument);
+
+                HttpWebRequest webRequest = CreateWebRequest(url, action);
+
+                X509Certificate2 cert = certificate ?? GetCheckedCertificate();
+
+                webRequest.ClientCertificates.Add(cert);
+
+                using (Stream stream = webRequest.GetRequestStream())
+                {
+                    xmlDocument.Save(stream);
+                }
+
+                HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
+
+                Stream dataStream = response.GetResponseStream();
+
+
+                using (StreamReader reader = new StreamReader(dataStream))
+                {
+                    responseFromServer = reader.ReadToEnd();
+                    reader.Close();
+                    dataStream.Close();
+                    response.Close();
+                }
             }
-
-            HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
-
-            Stream dataStream = response.GetResponseStream();
-
-            string responseFromServer;
-
-            using (StreamReader reader = new StreamReader(dataStream))
+            else
             {
-                responseFromServer = reader.ReadToEnd();
-                reader.Close();
-                dataStream.Close();
-                response.Close();
+                var cliente = new ApiNoverifactu();
+                responseFromServer = cliente.EnviarPeticionAsync(xmlDocument, certificate).GetAwaiter().GetResult();
             }
-
             return responseFromServer;
 
         }
@@ -150,7 +164,7 @@ namespace VeriFactu.Net
         /// <param name="action">Acción de servicio web.</param>
         /// <param name="xmlDocument">Documento xml.</param>
         /// <returns>Texto de la respuesta.</returns>
-        private static string GetResponse(HttpClient httpClient, string url, string action, XmlDocument xmlDocument) 
+        private static string GetResponse(HttpClient httpClient, string url, string action, XmlDocument xmlDocument)
         {
 
             var req = new HttpRequestMessage(HttpMethod.Post, url)
@@ -215,7 +229,7 @@ namespace VeriFactu.Net
         /// <param name="action">Acción a ejecutar.</param>
         /// <param name="certificate">Certificado para la petición.</param>
         /// <returns></returns>
-        public static HttpClient GetHttpClient(string url, string action, X509Certificate2 certificate = null) 
+        public static HttpClient GetHttpClient(string url, string action, X509Certificate2 certificate = null)
         {
 
             X509Certificate2 cert = certificate ?? GetCheckedCertificate();
@@ -244,7 +258,7 @@ namespace VeriFactu.Net
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", false);
             ServicePointManager.Expect100Continue = false;
 
-            httpClient = new HttpClient(socketsHttpHandler) 
+            httpClient = new HttpClient(socketsHttpHandler)
             {
                 Timeout = TimeSpan.FromSeconds(100),
                 DefaultRequestVersion = new Version(1, 1)
@@ -281,7 +295,7 @@ namespace VeriFactu.Net
         public static X509Certificate2 GetCertificate()
         {
 
-            if(Certificate != null) // 1. Valor establecido.
+            if (Certificate != null) // 1. Valor establecido.
                 return Certificate;
 
             var cert = GetCertificateByFile(); // 2. Valor en Settings por fichero.
@@ -308,7 +322,7 @@ namespace VeriFactu.Net
         public static X509Certificate2 GetCertificateBySerial()
         {
 
-            foreach (var store in new X509Store[] { new X509Store(), new X509Store(StoreLocation.LocalMachine) }) 
+            foreach (var store in new X509Store[] { new X509Store(), new X509Store(StoreLocation.LocalMachine) })
             {
 
                 store.Open(OpenFlags.ReadOnly);
@@ -342,7 +356,7 @@ namespace VeriFactu.Net
                     if (cert.Thumbprint.Equals(Settings.Current.CertificateThumbprint, StringComparison.OrdinalIgnoreCase))
                         return cert;
 
-            }         
+            }
 
             return null;
 
@@ -375,7 +389,7 @@ namespace VeriFactu.Net
         }
 
         #endregion
-    
+
     }
 
 }

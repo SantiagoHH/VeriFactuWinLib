@@ -37,6 +37,14 @@
     address: info@irenesolutions.com
  */
 
+/*
+  Modificaciones realizadas por: Santiago Nicolás Hernández Hernández  
+  Empresa: Ingeniería de Desarrollo y Servicios de Canarias, S.L. (https://idssoft.net/)  
+  Fecha: 2025  
+  Descripción: Adaptación para modo NoVerifactu, nuevos prefijos para manejar las peticiones al sistema de almacenamiento.
+*/
+
+
 namespace VeriFactu
 {
 
@@ -48,6 +56,17 @@ namespace VeriFactu
     {
 
         #region Constantes
+
+        /// <summary>
+        /// Prefijo del endpoint de pruebas Modo Noverifactu.
+        /// </summary>
+        public const string TestNoVerifactu = "ip_app_test";
+
+
+        /// <summary>
+        /// Prefijo del endpoint de producción Modo Noverifactu.
+        /// </summary>
+        public const string ProdNoVerifactu = "ip_app";
 
         /// <summary>
         /// Prefijo del endpoint de pruebas.

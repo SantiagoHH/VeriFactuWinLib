@@ -3,67 +3,67 @@
   <PropertyGroup>
     <TargetFrameworks>net7.0;net8.0;netcoreapp3.1</TargetFrameworks>
     <ApplicationIcon>VeriFactu.ico</ApplicationIcon>
-    <Version>1.0.62</Version>
-    <Title>VeriFactu</Title>
-    <Authors>Manuel Diago</Authors>
-    <Company>Irene Solutions SL</Company>
+    <Version>1.0.0-preview</Version>
+    <Title>VeriFactuWinLib</Title>
+    <Authors>Santiago Nicolás Hernández Hernández</Authors>
+    <Company>INGENIERIA DE DESARROLLO Y SERVICIOS DE CANARIAS, S.L.</Company>
     <Description>Generación, conservación y envío facturas VERI*FACTU</Description>
-    <Copyright>Irene Solutions SL 2025</Copyright>
-    <PackageProjectUrl>https://github.com/mdiago/VeriFactu</PackageProjectUrl>
+    <Copyright>INGENIERIA DE DESARROLLO Y SERVICIOS DE CANARIAS SL 2025</Copyright>
+    <PackageProjectUrl>https://github.com/SantiagoHH/VeriFactuWinLib.git</PackageProjectUrl>
     <PackageIcon>VeriFactu.png</PackageIcon>
-    <RepositoryUrl>https://github.com/mdiago/VeriFactu</RepositoryUrl>
+    <RepositoryUrl>https://github.com/SantiagoHH/VeriFactuWinLib.git</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>VeriFactu;Facturas;AEAT</PackageTags>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <AssemblyVersion>1.0.6.2</AssemblyVersion>
-    <FileVersion>1.0.6.2</FileVersion>
-    <AssemblyName>VeriFactu</AssemblyName>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <AssemblyName>VeriFactuWinLib</AssemblyName>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);CustomContentTarget</TargetsForTfmSpecificContentInPackage>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Nullable>disable</Nullable>
   </PropertyGroup>
-  
-    <!-- Suprime las advertencia NU5118, NU5128 -->
+
+  <!-- Suprime las advertencia NU5118, NU5128 -->
   <PropertyGroup>
     <NoWarn>$(NoWarn);NU5118</NoWarn>
-	<NoWarn>$(NoWarn);NU5128</NoWarn>
-	<SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
-	<GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
-   <Target Name="CustomContentTarget">
+  <Target Name="CustomContentTarget">
     <ItemGroup>
       <TfmSpecificPackageFile Include="..\NetFramework\bin\Debug\VeriFactu.dll">
         <PackagePath>lib/net48</PackagePath>
       </TfmSpecificPackageFile>
-       <TfmSpecificPackageFile Include="..\NetFramework\bin\Debug\VeriFactu.xml">
+      <TfmSpecificPackageFile Include="..\NetFramework\bin\Debug\VeriFactu.xml">
         <PackagePath>lib/net48</PackagePath>
       </TfmSpecificPackageFile>
     </ItemGroup>
-	<ItemGroup>
+    <ItemGroup>
       <TfmSpecificPackageFile Include="..\NetFramework472\bin\Debug\VeriFactu.dll">
         <PackagePath>lib/net472</PackagePath>
       </TfmSpecificPackageFile>
-       <TfmSpecificPackageFile Include="..\NetFramework472\bin\Debug\VeriFactu.xml">
+      <TfmSpecificPackageFile Include="..\NetFramework472\bin\Debug\VeriFactu.xml">
         <PackagePath>lib/net472</PackagePath>
       </TfmSpecificPackageFile>
     </ItemGroup>
-	<ItemGroup>
+    <ItemGroup>
       <TfmSpecificPackageFile Include="..\NetFramework461\bin\Debug\VeriFactu.dll">
         <PackagePath>lib/net461</PackagePath>
       </TfmSpecificPackageFile>
-       <TfmSpecificPackageFile Include="..\NetFramework461\bin\Debug\VeriFactu.xml">
+      <TfmSpecificPackageFile Include="..\NetFramework461\bin\Debug\VeriFactu.xml">
         <PackagePath>lib/net461</PackagePath>
       </TfmSpecificPackageFile>
     </ItemGroup>
-  </Target> 
-    
+  </Target>
+
 
 
   <ItemGroup>
