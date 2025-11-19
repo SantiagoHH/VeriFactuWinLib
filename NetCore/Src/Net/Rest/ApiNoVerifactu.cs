@@ -19,6 +19,7 @@
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using VeriFactu.Config;
@@ -142,7 +143,7 @@ namespace VeriFactu.Net.Rest
 
                 // Si token expiró según la API, renovar y reintentar
 
-                if (string.Equals(mediaType, "text/html", StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(mediaType, "text/html", StringComparison.OrdinalIgnoreCase) || response.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     Console.WriteLine("⚠️ Token expirado según API, renovando...");
                     if (await AuthenticateAsync())
@@ -156,7 +157,6 @@ namespace VeriFactu.Net.Rest
                         return null;
                     }
                 }
-
                 string responseBody = await response.Content.ReadAsStringAsync();
                 Console.WriteLine($"🔹 Código HTTP: {(int)response.StatusCode}");
                 Console.WriteLine($"✅ Respuesta: {responseBody}");
