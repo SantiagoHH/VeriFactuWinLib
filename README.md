@@ -1,8 +1,5 @@
 # VeriFactuWinLib
 
-> ⚠️ AVISO: Esta versión de VeriFactuWinLib es **experimental** y aún no está lista para producción.
-> No se debe utilizar para enviar facturas reales hasta completar todos los requisitos legales, incluyendo la Declaración Responsable de Software.
-
 Biblioteca para Windows basada en el proyecto original **VeriFactu**,
 diseñada para integrarse en aplicaciones que necesiten enviar registros
 de facturación tanto a los servicios de la **AEAT** como a **servidores
