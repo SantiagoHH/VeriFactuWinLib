@@ -43,7 +43,6 @@ Empresa: Ingeniería de Desarrollo y Servicios de Canarias, S.L. (https://idssof
 Fecha: 2025  
 Descripción: Modificaciones al método Call nueve funcionalidad del modo no_verifactu.
 */
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -56,6 +55,7 @@ using System.Xml;
 using System.Xml.Linq;
 using VeriFactu.Config;
 using VeriFactu.Net.Rest;
+
 namespace VeriFactu.Net
 {
 
@@ -113,7 +113,6 @@ namespace VeriFactu.Net
         /// <returns>Devuelve la respuesta.</returns>
         internal static string Call(string url, string action, XmlDocument xmlDocument, X509Certificate2 certificate = null)
         {
-
             string responseFromServer = null;
             if (Settings.Current.VeriFactuMode == "verifactu")
             {
@@ -135,7 +134,6 @@ namespace VeriFactu.Net
 
                 Stream dataStream = response.GetResponseStream();
 
-
                 using (StreamReader reader = new StreamReader(dataStream))
                 {
                     responseFromServer = reader.ReadToEnd();
@@ -143,12 +141,14 @@ namespace VeriFactu.Net
                     dataStream.Close();
                     response.Close();
                 }
+
             }
             else
             {
                 var cliente = new ApiNoverifactu();
                 responseFromServer = cliente.EnviarPeticionAsync(xmlDocument, certificate).GetAwaiter().GetResult();
             }
+
             return responseFromServer;
 
         }

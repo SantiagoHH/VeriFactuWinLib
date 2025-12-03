@@ -37,63 +37,30 @@
     address: info@irenesolutions.com
  */
 
-namespace VeriFactu.Xml.Factu.Alta
+using System;
+
+namespace VeriFactu.Common.Exceptions
 {
 
     /// <summary>
-    /// Clave del tipo de factura (L2).
+    /// Representa una excepción cuando en una petición
+    /// a un web service se espera un xml y en su lugar
+    /// se obtiene un html en la respuesta.
     /// </summary>
-    public enum TipoFactura
+    public class UnexpectedHtmlException : Exception
     {
 
-        /// <summary>
-        /// Factura (art. 6, 7.2 y 7.3 del RD 1619/2012).
-        /// </summary>
-        F1,
+        #region Construtores de Instancia
 
         /// <summary>
-        /// Factura Simplificada y Facturas sin identificación
-        /// del destinatario art. 6.1.d) RD 1619/2012.
+        /// Constructor.
         /// </summary>
-        F2,
+        /// <param name="html">Texto html obtenido cuando se esperaba xml.</param>
+        public UnexpectedHtmlException(string html) : base(html)
+        { 
+        }
 
-        /// <summary>
-        /// Factura emitida en sustitución de facturas
-        /// simplificadas facturadas y declaradas.
-        /// </summary>
-        F3,
-
-        /// <summary>
-        /// Factura Rectificativa (Error fundado en derecho y
-        /// Art. 80 Uno Dos y Seis LIVA).
-        /// </summary>
-        R1,
-
-        /// <summary>
-        /// Factura Rectificativa (Art. 80.3). Cuando el destinatario
-        /// de las operaciones sujetas al Impuesto no haya hecho
-        /// efectivo el pago de las cuotas repercutidas y siempre que,
-        /// con posterioridad al devengo de la operación, se dicte
-        /// auto de declaración de concurso.
-        /// </summary>
-        R2,
-
-        /// <summary>
-        /// Factura Rectificativa (Art. 80.4). Cuando los créditos
-        /// correspondientes a las cuotas repercutidas por las
-        /// operaciones gravadas sean total o parcialmente incobrables.
-        /// </summary>
-        R3,
-
-        /// <summary>
-        /// Factura Rectificativa (Resto).
-        /// </summary>
-        R4,
-
-        /// <summary>
-        /// Factura Rectificativa en facturas simplificadas.
-        /// </summary>
-        R5
+        #endregion
 
     }
 

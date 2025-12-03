@@ -44,7 +44,6 @@
   Descripción: Adaptación para modo NoVerifactu, nuevos prefijos para manejar las peticiones al sistema de almacenamiento.
 */
 
-
 namespace VeriFactu
 {
 
@@ -57,10 +56,11 @@ namespace VeriFactu
 
         #region Constantes
 
+
         /// <summary>
         /// Prefijo del endpoint de pruebas Modo Noverifactu.
         /// </summary>
-        public const string TestNoVerifactu = "ip_app_test";
+        public const string TestNoVerifactu = "ip_app";
 
 
         /// <summary>

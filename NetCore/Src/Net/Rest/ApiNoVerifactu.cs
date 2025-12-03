@@ -72,11 +72,11 @@ namespace VeriFactu.Net.Rest
                 string json = JsonSerializer.Serialize(payload);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                Console.WriteLine($"❌ Url: {url}");
+                Console.WriteLine($"Url: {url}");
                 var response = await _httpClient.PostAsync(url, content);
                 if (!response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine($"❌ Error autenticando: {response.StatusCode}");
+                    Console.WriteLine($"Error autenticando: {response.StatusCode}");
                     return false;
                 }
 
@@ -89,12 +89,12 @@ namespace VeriFactu.Net.Rest
                 Settings.Current.NoVeriFactuToken = _bearerToken;
                 Settings.Current.NoVeriFactuTokenTime = _tokenExpiration;
                 Settings.Save();
-                Console.WriteLine("✅ Token guardado correctamente");
+                Console.WriteLine("Token guardado correctamente");
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("🚨 Error autenticando: " + ex.Message);
+                Console.WriteLine("Error autenticando: " + ex.Message);
                 return false;
             }
         }
@@ -106,7 +106,7 @@ namespace VeriFactu.Net.Rest
         {
             if (string.IsNullOrEmpty(_bearerToken) || DateTime.UtcNow >= _tokenExpiration)
             {
-                Console.WriteLine("⚠️ Token no válido o expirado. Autenticando...");
+                Console.WriteLine("Token no válido o expirado. Autenticando...");
                 return await AuthenticateAsync();
             }
             return true;
@@ -145,10 +145,10 @@ namespace VeriFactu.Net.Rest
 
                 if (string.Equals(mediaType, "text/html", StringComparison.OrdinalIgnoreCase) || response.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    Console.WriteLine("⚠️ Token expirado según API, renovando...");
+                    Console.WriteLine("Token expirado según API, renovando...");
                     if (await AuthenticateAsync())
                     {
-                        Console.WriteLine("⚠️ Token renovando...");
+                        Console.WriteLine("Token renovando...");
                         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _bearerToken);
                         response = await _httpClient.PostAsync(url, content);
                     }
@@ -158,13 +158,13 @@ namespace VeriFactu.Net.Rest
                     }
                 }
                 string responseBody = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"🔹 Código HTTP: {(int)response.StatusCode}");
-                Console.WriteLine($"✅ Respuesta: {responseBody}");
+                Console.WriteLine($"Código HTTP: {(int)response.StatusCode}");
+                Console.WriteLine($"Respuesta: {responseBody}");
                 return responseBody;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("🚨 Error enviando petición: " + ex.Message);
+                Console.WriteLine("Error enviando petición: " + ex.Message);
                 return null;
             }
         }

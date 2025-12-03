@@ -295,7 +295,8 @@ namespace VeriFactu.Business
 
                 }
 
-                detalleDesglose.ClaveRegimenSpecified = (detalleDesglose.Impuesto == Impuesto.IVA || detalleDesglose.Impuesto == Impuesto.IGIC);
+                detalleDesglose.ClaveRegimenSpecified = (detalleDesglose.Impuesto == Impuesto.IVA || 
+                    detalleDesglose.Impuesto == Impuesto.IPSI || detalleDesglose.Impuesto == Impuesto.IGIC);
 
                 desglose.Add(detalleDesglose);
 
@@ -354,9 +355,24 @@ namespace VeriFactu.Business
                     }
                 };
 
-            if(string.IsNullOrEmpty(BuyerCountryID))
+            // Si el campo IDType = “02” (NIF-IVA), no será exigible el campo CodigoPais.
+            if (BuyerIDType == IDType.NIF_IVA && string.IsNullOrEmpty(BuyerCountryID))
+                return new List<Interlocutor>()
+                {
+                    new Interlocutor
+                    {
+                        NombreRazon = BuyerName,
+                        IDOtro = new IDOtro()
+                        {
+                            ID = BuyerID,
+                            IDType = BuyerIDType
+                        }
+                    }
+                };
+
+            if (string.IsNullOrEmpty(BuyerCountryID))
                 throw new Exception($"Error en factura ({this}): Si BuyerID no es un identificador español válido" +
-                    " (NIF, DNI, NIE...) es obligatorio que BuyerCountryID tenga un valor.");
+                    " (NIF, DNI, NIE...) o IDType = “02” (NIF-IVA) es obligatorio que BuyerCountryID tenga un valor.");
 
             bool countryIdValid = Enum.TryParse(BuyerCountryID, out CodigoPais buyerCountryId);
 

@@ -35,7 +35,7 @@
 
   1. `static readonly string _Path = "path_verifactu_setting";`
 
-     - Define el directorio donde se guardan los archivos generados. (Línea 80)
+     - Define el directorio donde se guardan los archivos generados. (Línea 80) Ejemplo: $"C:{\_PathSep}Directorio-Personalizado{\_PathSep}VeriFactu"
 
   2. `public string VeriFactuMode { get; set; }`
 

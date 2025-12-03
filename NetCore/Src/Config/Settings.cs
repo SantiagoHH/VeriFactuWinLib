@@ -38,10 +38,10 @@
  */
 
 /*
- Modificaciones realizadas por: Santiago Nicolás Hernández Hernández  
- Empresa: Ingeniería de Desarrollo y Servicios de Canarias, S.L. (https://idssoft.net/)  
- Fecha: 2025  
- Descripción: Modificaciones a propiedades del proyecto original y añadidas nuevas propiedades para usar el modo no_verifactu.
+    Modificaciones realizadas por: Santiago Nicolás Hernández Hernández  
+    Empresa: Ingeniería de Desarrollo y Servicios de Canarias, S.L. (https://idssoft.net/)  
+    Fecha: 2025  
+    Descripción: Modificaciones a propiedades del proyecto original y añadidas nuevas propiedades para usar el modo no_verifactu.
 */
 
 using System;
@@ -230,9 +230,7 @@ namespace VeriFactu.Config
                 CertificateThumbprint = "",
                 CertificatePath = "",
                 CertificatePassword = "",
-                VeriFactuMode = "noverifactu_mode",
-                NoVeriFactuNif = "api_key_nif",
-                NoVeriFactuKey = "api_key_key",
+                VeriFactuMode = "verifactu",
                 VeriFactuEndPointNoVeriFactuPrefix = VeriFactuEndPointPrefixes.TestNoVerifactu,
                 VeriFactuEndPointPrefix = VeriFactuEndPointPrefixes.Test,
                 VeriFactuEndPointValidatePrefix = VeriFactuEndPointPrefixes.TestValidate,
@@ -240,8 +238,8 @@ namespace VeriFactu.Config
                 VeriFactuHashInputEncoding = "UTF-8",
                 SistemaInformatico = new SistemaInformatico()
                 {
-                    NIF = "B38440780",
-                    NombreRazon = "INGENIERÍA DE DESARROLLO Y SERVICIOS DE CANARIAS, S.L.",
+                    NIF = "B12959755",
+                    NombreRazon = "IRENE SOLUTIONS SL",
                     NombreSistemaInformatico = $"{Assembly.GetExecutingAssembly().GetName().Name}",
                     IdSistemaInformatico = "01",
                     Version = $"{Assembly.GetExecutingAssembly().GetName().Version}",
@@ -412,6 +410,13 @@ namespace VeriFactu.Config
         [XmlElement("VeriFactuEndPointValidatePrefix")]
         public string VeriFactuEndPointValidatePrefix { get; set; }
 
+        /// <summary>
+        /// Algoritmo a utilizar para el cálculo de hash.
+        /// Clave que identifica Tipo de hash aplicado para
+        /// obtener la huella. Alfanumérico(2) L12.
+        /// </summary>
+        [XmlElement("VeriFactuHashAlgorithm")]
+        public TipoHuella VeriFactuHashAlgorithm { get; set; }
 
         /// <summary>
         /// Modo Verifactu/Noverifactu.
@@ -445,15 +450,6 @@ namespace VeriFactu.Config
         /// </summary>
         [XmlElement("VeriFactuEndPointNoVeriFactuPrefix")]
         public string VeriFactuEndPointNoVeriFactuPrefix { get; set; }
-
-
-        /// <summary>
-        /// Algoritmo a utilizar para el cálculo de hash.
-        /// Clave que identifica Tipo de hash aplicado para
-        /// obtener la huella. Alfanumérico(2) L12.
-        /// </summary>
-        [XmlElement("VeriFactuHashAlgorithm")]
-        public TipoHuella VeriFactuHashAlgorithm { get; set; }
 
         /// <summary>
         /// Codificación del texto de entrada para el hash.
