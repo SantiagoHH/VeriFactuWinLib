@@ -60,8 +60,7 @@ Resumen del changelog:
   - `VeriFactuEndPointNoVeriFactuPrefix`
   - `NoVeriFactuToken`
   - `NoVeriFactuTokenTime`
-- Ajustes requeridos en `_Path` y en el método `GetDefault()` para
-  seleccionar el modo `verifactu` o `no_verifactu`.
+- Ajustes requeridos en `_Path`.
 
 Para más detalle consulta el archivo `CHANGELOG.md`.
 
